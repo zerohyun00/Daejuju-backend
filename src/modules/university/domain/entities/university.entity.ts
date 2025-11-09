@@ -4,7 +4,7 @@
  */
 export class University {
   private constructor(
-    private readonly id: number,
+    private readonly id: number | null,
     private name: string,
     private domain: string,
     private readonly createdAt: Date,
@@ -17,7 +17,7 @@ export class University {
     name: string,
     domain: string,
   ): University {
-    return new University(0, name, domain, new Date());
+    return new University(null, name, domain, new Date());
   }
 
   /**
@@ -80,7 +80,7 @@ export class University {
   }
 
   // Getters
-  getId(): number {
+  getId(): number | null {
     return this.id;
   }
 

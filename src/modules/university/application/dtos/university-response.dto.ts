@@ -14,8 +14,15 @@ export class UniversityResponseDto {
    * Domain Entity를 Response DTO로 변환
    */
   static fromEntity(university: University): UniversityResponseDto {
+    const id = university.getId();
+    if (id === null) {
+      throw new Error(
+        '대학 엔티티가 저장되지 않았습니다',
+      );
+    }
+
     const dto = new UniversityResponseDto();
-    dto.id = university.getId();
+    dto.id = id;
     dto.name = university.getName();
     dto.domain = university.getDomain();
     dto.createdAt = university.getCreatedAt();

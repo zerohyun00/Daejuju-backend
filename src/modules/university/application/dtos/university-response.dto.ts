@@ -15,7 +15,7 @@ export class UniversityResponseDto {
    */
   static fromEntity(university: University): UniversityResponseDto {
     const dto = new UniversityResponseDto();
-    dto.id = university.getId()!;
+    dto.id = university.getId();
     dto.name = university.getName();
     dto.domain = university.getDomain();
     dto.createdAt = university.getCreatedAt();

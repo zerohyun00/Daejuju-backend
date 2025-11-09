@@ -15,7 +15,9 @@ export class UniversityResponseDto {
    */
   static fromEntity(university: University): UniversityResponseDto {
     const id = university.getId();
-    if (id === null) {
+    const createdAt = university.getCreatedAt();
+
+    if (id === null || createdAt === null) {
       throw new Error(
         '대학 엔티티가 저장되지 않았습니다',
       );
@@ -25,7 +27,7 @@ export class UniversityResponseDto {
     dto.id = id;
     dto.name = university.getName();
     dto.domain = university.getDomain();
-    dto.createdAt = university.getCreatedAt();
+    dto.createdAt = createdAt;
     return dto;
   }
 

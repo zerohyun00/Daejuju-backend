@@ -7,7 +7,7 @@ export class University {
     private readonly id: number | null,
     private name: string,
     private domain: string,
-    private readonly createdAt: Date,
+    private readonly createdAt: Date | null,
   ) { }
 
   /**
@@ -17,7 +17,7 @@ export class University {
     name: string,
     domain: string,
   ): University {
-    return new University(null, name, domain, new Date());
+    return new University(null, name, domain, null);
   }
 
   /**
@@ -50,18 +50,17 @@ export class University {
 
   /**
    * DB 저장용 데이터 변환
+   * created_at은 TypeORM의 @CreateDateColumn이 자동으로 관리하므로 제외
    */
   toPersistence(): {
     id?: number;
     name: string;
     domain: string;
-    created_at?: Date;
   } {
     const data: {
       id?: number;
       name: string;
       domain: string;
-      created_at?: Date;
     } = {
       name: this.name,
       domain: this.domain,
@@ -71,12 +70,7 @@ export class University {
       data.id = this.id;
     }
 
-    if (this.createdAt) {
-      data.created_at = this.createdAt;
-    }
-
     return data;
-
   }
 
   // Getters
@@ -92,7 +86,7 @@ export class University {
     return this.domain;
   }
 
-  getCreatedAt(): Date {
+  getCreatedAt(): Date | null {
     return this.createdAt;
   }
 }

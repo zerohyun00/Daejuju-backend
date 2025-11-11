@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../../domain/enums/role.enum';
+import { Role, ROLE_ENUM } from '../../../domain/enums/role.enum';
 
 @Entity('users')
 export class UserSchema {
@@ -20,8 +20,8 @@ export class UserSchema {
 
   @Column({
     type: 'enum',
-    enum: Role,
-    default: Role.USER,
+    enum: ROLE_ENUM,
+    default: ROLE_ENUM.USER,
     nullable: false,
   })
   role: Role;

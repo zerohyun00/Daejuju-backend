@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  IUniversityRepository,
-  UNIVERSITY_REPOSITORY,
-} from '../../ports/university.repository.interface';
+import { IUniversityRepository } from '../../ports/university.repository.interface';
+import { UNIVERSITY_REPOSITORY } from '../../../university.di-tokens';
 import { University } from '../../../domain/entities/university.entity';
 
 /**

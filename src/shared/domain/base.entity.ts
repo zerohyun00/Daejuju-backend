@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 /**
  * Base Entity
@@ -12,9 +12,10 @@ export abstract class BaseEntity {
   protected updatedAt: Date;
 
   protected constructor(id?: string, createdAt?: Date, updatedAt?: Date) {
-    this.id = id || uuidv4();
-    this.createdAt = createdAt || new Date();
-    this.updatedAt = updatedAt || new Date();
+    const now = new Date();
+    this.id = id ?? uuidv7();
+    this.createdAt = createdAt ?? now;
+    this.updatedAt = updatedAt ?? now;
   }
 
   public getId(): string {

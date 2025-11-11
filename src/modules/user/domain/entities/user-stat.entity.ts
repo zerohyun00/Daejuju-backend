@@ -1,16 +1,11 @@
-import { UserStatistics } from '../value-objects/user-statistics.vo';
 
-/**
- * UserStat Entity
- * 사용자 통계 엔티티
- */
 export class UserStat {
   private constructor(
     private readonly userId: string,
-    private statistics: UserStatistics,
     private totalPosts: number,
     private totalComments: number,
     private totalLikesReceived: number,
+    private totalJournalEntries: number,
     private streakDays: number,
     private lastActivityDate: Date | null,
     private updatedAt: Date,
@@ -22,7 +17,7 @@ export class UserStat {
   static create(userId: string): UserStat {
     return new UserStat(
       userId,
-      UserStatistics.createDefault(),
+      0,
       0,
       0,
       0,
@@ -37,52 +32,24 @@ export class UserStat {
    */
   static fromDB(data: {
     user_id: string;
-    total_return: number;
-    monthly_return: number;
-    journal_count: number;
-    avg_holding_days: number;
     total_posts: number;
     total_comments: number;
     total_likes_received: number;
+    total_journal_entries: number;
     streak_days: number;
     last_activity_date: Date | null;
     updated_at: Date;
   }): UserStat {
-    const statistics = UserStatistics.fromDB({
-      total_return: data.total_return,
-      monthly_return: data.monthly_return,
-      journal_count: data.journal_count,
-      avg_holding_days: data.avg_holding_days,
-    });
-
     return new UserStat(
       data.user_id,
-      statistics,
       data.total_posts,
       data.total_comments,
       data.total_likes_received,
+      data.total_journal_entries,
       data.streak_days,
       data.last_activity_date,
       data.updated_at,
     );
-  }
-
-  /**
-   * 투자 통계 업데이트
-   */
-  updateInvestmentStats(
-    totalReturn: number,
-    monthlyReturn: number,
-    journalCount: number,
-    avgHoldingDays: number,
-  ): void {
-    this.statistics = this.statistics.update(
-      totalReturn,
-      monthlyReturn,
-      journalCount,
-      avgHoldingDays,
-    );
-    this.touch();
   }
 
   /**
@@ -107,6 +74,14 @@ export class UserStat {
   incrementLikesReceived(): void {
     this.totalLikesReceived++;
     this.touch();
+  }
+
+  /**
+   * 일지 작성 수 증가
+   */
+  incrementJournalEntries(): void {
+    this.totalJournalEntries++;
+    this.updateActivity();
   }
 
   /**
@@ -153,14 +128,12 @@ export class UserStat {
    * DB 저장용 데이터 변환
    */
   toPersistence() {
-    const statsPersistence = this.statistics.toPersistence();
-
     return {
       user_id: this.userId,
-      ...statsPersistence,
       total_posts: this.totalPosts,
       total_comments: this.totalComments,
       total_likes_received: this.totalLikesReceived,
+      total_journal_entries: this.totalJournalEntries,
       streak_days: this.streakDays,
       last_activity_date: this.lastActivityDate,
       updated_at: this.updatedAt,
@@ -170,10 +143,6 @@ export class UserStat {
   // Getters
   getUserId(): string {
     return this.userId;
-  }
-
-  getStatistics(): UserStatistics {
-    return this.statistics;
   }
 
   getTotalPosts(): number {
@@ -186,6 +155,10 @@ export class UserStat {
 
   getTotalLikesReceived(): number {
     return this.totalLikesReceived;
+  }
+
+  getTotalJournalEntries(): number {
+    return this.totalJournalEntries;
   }
 
   getStreakDays(): number {

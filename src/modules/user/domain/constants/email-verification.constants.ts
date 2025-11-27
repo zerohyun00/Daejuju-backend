@@ -1,0 +1,4 @@
+export const EMAIL_VERIFICATION_TTL_SECONDS = 300;
+export const EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS = 60;
+export const EMAIL_VERIFICATION_CACHE_PREFIX = 'email_verification:';
+

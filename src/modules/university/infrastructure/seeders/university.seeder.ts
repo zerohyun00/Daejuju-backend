@@ -133,6 +133,7 @@ export class UniversitySeeder {
       { name: '청주대학교', domain: 'cju.ac.kr' },
       { name: '한경국립대학교', domain: 'hknu.ac.kr' },
       { name: '한서대학교', domain: 'hanseo.ac.kr' },
+      { name: '테스트대학교', domain: 'gmail.com' },
     ];
 
     await this.universityRepository.upsert(universities, ['domain']);

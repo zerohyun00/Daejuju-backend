@@ -1,5 +1,6 @@
 import { VerificationCode } from '../value-objects/verification-code.vo';
-import { InvalidArgumentException } from '../../../../shared/domain/exceptions/invalid-argument.exception';
+import { InvalidArgumentException } from '../../../../shared/domain/exceptions';
+import { ERROR_MESSAGES } from '../constants/error-messages';
 
 /**
  * 이메일 인증 도메인 엔티티
@@ -48,11 +49,15 @@ export class EmailVerification {
    */
   verify(inputCode: string): void {
     if (this.verified) {
-      throw new InvalidArgumentException('이미 인증된 이메일입니다');
+      throw new InvalidArgumentException(
+        ERROR_MESSAGES.EMAIL_VERIFICATION_ALREADY_VERIFIED,
+      );
     }
 
     if (!this.code.equals(inputCode)) {
-      throw new InvalidArgumentException('잘못된 인증 코드입니다');
+      throw new InvalidArgumentException(
+        ERROR_MESSAGES.EMAIL_VERIFICATION_CODE_INVALID,
+      );
     }
 
     this.verified = true;

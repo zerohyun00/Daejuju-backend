@@ -1,13 +1,13 @@
-import { DomainException } from './domain.exception';
+import { NotFoundException as NestNotFoundException } from '@nestjs/common';
 
 /**
  * Not Found Exception
- * 엔티티를 찾을 수 없을 때 발생
+ *  
+ * HTTP 404 Not Found로 자동 변환
  */
-export class NotFoundException extends DomainException {
-  constructor(entity: string, identifier: string | number) {
-    super(`${entity} with identifier ${identifier} not found`);
+export class NotFoundException extends NestNotFoundException {
+  constructor(message: string) {
+    super(message);
     this.name = 'NotFoundException';
   }
 }
-

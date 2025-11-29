@@ -66,6 +66,27 @@ export class EmailVerification {
   }
 
   /**
+   * 재발송 가능 여부 확인
+   * @param cooldownSeconds 재발송 쿨다운 시간 (초)
+   * @returns true면 재발송 가능, false면 아직 쿨다운 중
+   */
+  canResend(cooldownSeconds: number): boolean {
+    const now = new Date();
+    const elapsedSeconds = (now.getTime() - this.createdAt.getTime()) / 1000;
+    return elapsedSeconds >= cooldownSeconds;
+  }
+
+  /**
+   * 재발송까지 남은 시간 계산 (초)
+   */
+  getRemainingCooldown(cooldownSeconds: number): number {
+    const now = new Date();
+    const elapsedSeconds = (now.getTime() - this.createdAt.getTime()) / 1000;
+    const remaining = Math.ceil(cooldownSeconds - elapsedSeconds);
+    return Math.max(0, remaining);
+  }
+
+  /**
    * Redis 캐시 저장용 데이터 변환
    */
   toCache() {

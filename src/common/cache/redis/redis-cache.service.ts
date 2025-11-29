@@ -85,18 +85,23 @@ export class RedisCacheService {
   }
 
   /**
-   * Prefix로 시작하는 모든 키 조회 (SCAN 패턴)
+   * Prefix로 시작하는 모든 키 조회 (SCAN 패턴 - Non-blocking)
    */
   async findByPrefix<T = any>(prefix: string): Promise<Record<string, T>> {
     try {
       const results: Record<string, T> = {};
 
-      const keys = await this.redis.keys(`${prefix}*`);
+      const stream = this.redis.scanStream({
+        match: `${prefix}*`,
+        count: 100,
+      });
 
-      for (const key of keys) {
-        const value = await this.get<T>(key);
-        if (value !== null) {
-          results[key] = value;
+      for await (const keys of stream) {
+        for (const key of keys) {
+          const value = await this.get<T>(key);
+          if (value !== null) {
+            results[key] = value;
+          }
         }
       }
 
@@ -120,14 +125,25 @@ export class RedisCacheService {
   }
 
   /**
-   * 모든 키 조회
+   * 패턴에 맞는 모든 키 조회 (SCAN 기반 - Non-blocking)
    */
   async keys(pattern: string): Promise<string[]> {
     try {
-      return await this.redis.keys(pattern);
+      const keys: string[] = [];
+
+      const stream = this.redis.scanStream({
+        match: pattern,
+        count: 100,
+      });
+
+      for await (const batch of stream) {
+        keys.push(...batch);
+      }
+
+      return keys;
     } catch (error) {
-      this.logger.error(`Redis KEYS 조회 실패: ${pattern}`, error);
-      throw new ServiceUnavailableException('Redis KEYS 조회 중 오류가 발생했습니다');
+      this.logger.error(`Redis SCAN 조회 실패: ${pattern}`, error);
+      throw new ServiceUnavailableException('Redis SCAN 조회 중 오류가 발생했습니다');
     }
   }
 

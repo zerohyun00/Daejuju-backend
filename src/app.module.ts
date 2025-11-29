@@ -7,6 +7,7 @@ import { getDatabaseConfig } from './config/database.config';
 import { RedisCacheModule } from './common/cache/redis/redis-cache.module';
 import { UniversityModule } from './modules/university/university.module';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/user.module';
     RedisCacheModule,
     UniversityModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,6 +19,7 @@ import {
 import { UniversityModule } from '../university/university.module';
 import { SendVerificationEmailUseCase } from './application/use-cases/commands/send-verification-email.use-case';
 import { VerifyEmailUseCase } from './application/use-cases/commands/verify-email.use-case';
+import { RegisterUserUseCase } from './application/use-cases/commands/register-user.use-case';
 import { AuthController } from './presentation/controllers/auth.controller';
 
 @Module({
@@ -51,6 +52,7 @@ import { AuthController } from './presentation/controllers/auth.controller';
     },
     SendVerificationEmailUseCase,
     VerifyEmailUseCase,
+    RegisterUserUseCase,
   ],
   exports: [
     USER_REPOSITORY,

@@ -4,7 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getDatabaseConfig } from './config/database.config';
+import { RedisCacheModule } from './common/cache/redis/redis-cache.module';
 import { UniversityModule } from './modules/university/university.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -17,7 +19,9 @@ import { UniversityModule } from './modules/university/university.module';
       useFactory: (configService: ConfigService) =>
         getDatabaseConfig(configService),
     }),
+    RedisCacheModule,
     UniversityModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

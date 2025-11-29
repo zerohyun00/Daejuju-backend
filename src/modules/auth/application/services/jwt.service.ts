@@ -39,7 +39,7 @@ export class JwtService {
    */
   generateRefreshToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string {
     return this.jwtService.sign(payload, {
-      secret: this.config.get('JWT_REFRESH_SECRET', this.config.get('JWT_SECRET')),
+      secret: this.config.getOrThrow('JWT_REFRESH_SECRET'),
       expiresIn: this.config.get('JWT_REFRESH_EXPIRES_IN', '7d'),
     });
   }
@@ -63,7 +63,7 @@ export class JwtService {
   async verifyRefreshToken(token: string): Promise<JwtPayload | null> {
     try {
       return await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.config.get('JWT_REFRESH_SECRET', this.config.get('JWT_SECRET')),
+        secret: this.config.getOrThrow('JWT_REFRESH_SECRET'),
       });
     } catch (error) {
       return null;

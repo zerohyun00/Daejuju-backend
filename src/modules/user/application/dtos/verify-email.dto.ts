@@ -1,11 +1,12 @@
 import { IsEmail, IsString, Matches } from 'class-validator';
+import { VALIDATION_MESSAGES } from '../../domain/constants/validation-messages';
 
 export class VerifyEmailDto {
-  @IsEmail({}, { message: '유효한 이메일 주소를 입력해주세요' })
+  @IsEmail({}, { message: VALIDATION_MESSAGES.EMAIL_INVALID })
   email: string;
 
   @IsString()
-  @Matches(/^\d{6}$/, { message: '인증 코드는 6자리 숫자여야 합니다' })
+  @Matches(/^\d{6}$/, { message: VALIDATION_MESSAGES.CODE_FORMAT_INVALID })
   code: string;
 }
 

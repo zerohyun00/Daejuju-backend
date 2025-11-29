@@ -2,7 +2,9 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { IEmailVerificationRepository } from '../../ports/email-verification.repository.interface';
 import { EMAIL_VERIFICATION_REPOSITORY } from '../../../user.di-tokens';
 import { VerifyEmailDto } from '../../dtos/verify-email.dto';
-import { InvalidArgumentException } from '../../../../../shared/domain/exceptions/invalid-argument.exception';
+import { InvalidArgumentException } from '../../../../../shared/domain/exceptions';
+import { ERROR_MESSAGES } from '../../../domain/constants/error-messages';
+import { SUCCESS_MESSAGES } from '../../../domain/constants/success-messages';
 
 @Injectable()
 export class VerifyEmailUseCase {
@@ -23,7 +25,7 @@ export class VerifyEmailUseCase {
 
     if (!verification) {
       throw new InvalidArgumentException(
-        '인증 요청을 찾을 수 없습니다. 먼저 인증 이메일을 요청해주세요.',
+        ERROR_MESSAGES.EMAIL_VERIFICATION_NOT_FOUND,
       );
     }
 
@@ -36,7 +38,7 @@ export class VerifyEmailUseCase {
     this.logger.log(`이메일 인증 완료: ${email}`);
 
     return {
-      message: '이메일 인증이 완료되었습니다.',
+      message: SUCCESS_MESSAGES.EMAIL_VERIFIED,
       verified: true,
     };
   }

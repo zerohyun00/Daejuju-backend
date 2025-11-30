@@ -3,6 +3,8 @@ import { USER_REPOSITORY } from '../../../../user/user.di-tokens';
 import { IUserRepository } from '../../../../user/application/ports/user.repository.interface';
 import { JwtService } from '../../services/jwt.service';
 import { LoginDto } from '../../dtos/login.dto';
+import { LoginResponseDto } from '../../dtos/login-response.dto';
+import { UserResponseDto } from '../../dtos/user-response.dto';
 import { UnauthorizedException } from '../../../../../shared/domain/exceptions';
 import { RedisCacheService } from '../../../../../common/cache/redis/redis-cache.service';
 import {
@@ -27,15 +29,7 @@ export class LoginUseCase {
     private readonly redisCacheService: RedisCacheService,
   ) { }
 
-  async execute(dto: LoginDto): Promise<{
-    accessToken: string;
-    refreshToken: string;
-    user: {
-      userId: string;
-      email: string;
-      role: string;
-    };
-  }> {
+  async execute(dto: LoginDto): Promise<LoginResponseDto> {
     // 1. 사용자 조회
     const user = await this.userRepo.findByEmail(dto.email);
     if (!user) {
@@ -66,15 +60,14 @@ export class LoginUseCase {
 
     this.logger.log(`로그인 성공: ${user.getEmail().getValue()}`);
 
-    return {
-      accessToken,
-      refreshToken,
-      user: {
-        userId: user.getId(),
-        email: user.getEmail().getValue(),
-        role: user.getRole(),
-      },
-    };
+    // 6. Response DTO 생성
+    const userResponse = new UserResponseDto(
+      user.getId(),
+      user.getEmail().getValue(),
+      user.getRole(),
+    );
+
+    return new LoginResponseDto(accessToken, refreshToken, userResponse);
   }
 }
 
